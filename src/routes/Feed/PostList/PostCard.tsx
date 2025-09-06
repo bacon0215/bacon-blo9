@@ -3,7 +3,6 @@ import { CONFIG } from "site.config"
 import { formatDate } from "src/libs/utils"
 import Tag from "../../../components/Tag"
 import { TPost } from "../../../types"
-import Image from "next/image"
 import Category from "../../../components/Category"
 import styled from "@emotion/styled"
 
@@ -24,12 +23,7 @@ const PostCard: React.FC<Props> = ({ data }) => {
         )}
         {data.thumbnail && (
           <div className="thumbnail">
-            <Image
-              src={data.thumbnail}
-              fill
-              alt={data.title}
-              css={{ objectFit: "cover" }}
-            />
+            <img src={data.thumbnail} alt={data.title} />
           </div>
         )}
         <div data-thumb={!!data.thumbnail} data-category={!!category} className="content">
@@ -93,6 +87,15 @@ const StyledWrapper = styled(Link)`
       width: 100%;
       background-color: ${({ theme }) => theme.colors.gray2};
       padding-bottom: 66%;
+
+      img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
 
       @media (min-width: 1024px) {
         padding-bottom: 50%;

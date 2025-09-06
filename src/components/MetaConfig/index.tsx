@@ -32,7 +32,11 @@ const MetaConfig: React.FC<MetaConfigProps> = (props) => {
       {/* post */}
       {props.type === "Post" && (
         <>
-          <meta property="article:published_time" content={props.date} />
+      <meta charSet="UTF-8" />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="icon" sizes="32x32" href="/favicon-32x32.png" />
+      <link rel="icon" sizes="16x16" href="/favicon-16x16.png" />
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           <meta property="article:author" content={CONFIG.profile.name} />
         </>
       )}
