@@ -2,9 +2,9 @@ const CONFIG = {
   // profile setting (required)
   profile: {
     name: "Bacon",
-    image: "/avatar.svg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
+    image: "/bacon.jpg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "Highschool Student",
-    bio: "I study hacking 😎.",
+    bio: "I study hacking 😎",
     email: "beicon0215@gmail.com",
     linkedin: "",
     github: "bacon0215",
@@ -18,7 +18,7 @@ const CONFIG = {
   ],
   // blog setting (required)
   blog: {
-    title: "bacon-log",
+    title: "Bacon's Blog",
     description: "welcome to Bacon's blog!",
     scheme: "dark", // 'light' | 'dark' | 'system'
   },
@@ -31,6 +31,7 @@ const CONFIG = {
 
   // notion configuration (required)
   notionConfig: {
+    // @ts-ignore
     pageId: process.env.NOTION_PAGE_ID,
   },
 
@@ -38,24 +39,28 @@ const CONFIG = {
   googleAnalytics: {
     enable: false,
     config: {
+      // @ts-ignore
       measurementId: process.env.NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID || "",
     },
   },
   googleSearchConsole: {
     enable: false,
     config: {
+      // @ts-ignore
       siteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
     },
   },
   naverSearchAdvisor: {
     enable: false,
     config: {
+      // @ts-ignore
       siteVerification: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "",
     },
   },
   utterances: {
     enable: true,
     config: {
+      // @ts-ignore
       repo: process.env.NEXT_PUBLIC_UTTERANCES_REPO || "",
       "issue-term": "og:title",
       label: "💬 Utterances",
@@ -68,6 +73,7 @@ const CONFIG = {
       appid: "", // Embed Code -> data-app-id value
     },
   },
+  // @ts-ignore
   isProd: process.env.VERCEL_ENV === "production", // distinguish between development and production environment (ref: https://vercel.com/docs/environment-variables#system-environment-variables)
   revalidateTime: 21600 * 7, // revalidate time for [slug], index
 }
