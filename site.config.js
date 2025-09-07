@@ -2,7 +2,7 @@ const CONFIG = {
   // profile setting (required)
   profile: {
     name: "Bacon",
-    image: "/bacon.jpg", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
+    image: "/bacon.jpg?v=3", // If you want to create your own notion avatar, check out https://notion-avatar.vercel.app
     role: "Highschool Student",
     bio: "I study hacking 😎",
     email: "beicon0215@gmail.com",
@@ -19,7 +19,7 @@ const CONFIG = {
   // blog setting (required)
   blog: {
     title: "Bacon's Blog",
-    description: "welcome to Bacon's blog!",
+    description: "Welcome to Bacon's blog!",
     scheme: "dark", // 'light' | 'dark' | 'system'
   },
 
