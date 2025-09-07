@@ -73,6 +73,18 @@ export const Global = () => {
           margin: 0;
           border-top: 1px solid ${theme.colors.gray6};
         }
+
+        /* Code fonts: Fira Code only for code blocks */
+        code,
+        pre,
+        kbd,
+        samp,
+        .notion-inline-code,
+        .notion-code code {
+          font-family: var(--font-fira-code), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+          font-feature-settings: "calt" 1;
+          font-variant-ligatures: contextual;
+        }
       `}
     />
   )
