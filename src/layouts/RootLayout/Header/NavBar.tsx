@@ -2,11 +2,9 @@ import styled from "@emotion/styled"
 import Link from "next/link"
 
 const NavBar: React.FC = () => {
-  // About 제거 → 배열 비워두거나 다른 메뉴 넣기
-  const links: { id: number; name: string; to: string }[] = []
-
+  const links = [{ id: 1, name: "About", to: "/about" }]
   return (
-    <StyledWrapper>
+    <StyledWrapper className="">
       <ul>
         {links.map((link) => (
           <li key={link.id}>

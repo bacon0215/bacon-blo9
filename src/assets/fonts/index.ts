@@ -1,2 +1,2 @@
-export * from './D2Coding'
-export * from './FiraCode'
+export * from './pretendard'
+export * from './roboto'

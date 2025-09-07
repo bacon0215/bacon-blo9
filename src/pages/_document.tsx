@@ -1,6 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document"
 import { CONFIG } from "site.config"
-import { d2coding, firaCode } from "@/assets/fonts/D2Coding"   // ⬅ 추가
 
 class MyDocument extends Document {
   render() {
@@ -12,29 +11,33 @@ class MyDocument extends Document {
             rel="apple-touch-icon"
             sizes="192x192"
             href="/apple-touch-icon.png"
-          />
+          ></link>
           <link
             rel="alternate"
             type="application/rss+xml"
             title="RSS 2.0"
             href="/feed"
-          />
+          ></link>
           {/* google search console */}
           {CONFIG.googleSearchConsole.enable === true && (
-            <meta
-              name="google-site-verification"
-              content={CONFIG.googleSearchConsole.config.siteVerification}
-            />
+            <>
+              <meta
+                name="google-site-verification"
+                content={CONFIG.googleSearchConsole.config.siteVerification}
+              />
+            </>
           )}
           {/* naver search advisor */}
           {CONFIG.naverSearchAdvisor.enable === true && (
-            <meta
-              name="naver-site-verification"
-              content={CONFIG.naverSearchAdvisor.config.siteVerification}
-            />
+            <>
+              <meta
+                name="naver-site-verification"
+                content={CONFIG.naverSearchAdvisor.config.siteVerification}
+              />
+            </>
           )}
         </Head>
-        <body className={`${d2coding.variable} ${firaCode.variable}`}>
+        <body>
           <Main />
           <NextScript />
         </body>
