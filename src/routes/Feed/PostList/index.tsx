@@ -1,26 +1,8 @@
 import { useRouter } from "next/router"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useState } from "react"
 import PostCard from "src/routes/Feed/PostList/PostCard"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
-
-// 안전한 생성일 추출: created_time/createdAt 우선, 보조로 start_date/date/publishedAt
-const getPostDate = (p: any): Date => {
-  const created =
-    p?.created_time ??   // Notion Page
-    p?.createdAt;        // 일반 백엔드
-
-  const notionStart =
-    p?.properties?.start_date?.start ??
-    p?.properties?.date?.start;
-
-  const fallback =
-    p?.date ??
-    p?.publishedAt;
-
-  const raw = created ?? notionStart ?? fallback;
-  return raw ? new Date(raw) : new Date(0); // raw가 falsy면 epoch
-};
 
 type Props = {
   q: string
@@ -29,8 +11,7 @@ type Props = {
 const PostList: React.FC<Props> = ({ q }) => {
   const router = useRouter()
   const data = usePostsQuery()
-  const base = useMemo(() => (Array.isArray(data) ? data : []), [data]);
-  const [filteredPosts, setFilteredPosts] = useState(base)
+  const [filteredPosts, setFilteredPosts] = useState(data)
 
   const currentTag = `${router.query.tag || ``}` || undefined
   const currentCategory = `${router.query.category || ``}` || DEFAULT_CATEGORY
@@ -38,12 +19,11 @@ const PostList: React.FC<Props> = ({ q }) => {
 
   useEffect(() => {
     setFilteredPosts(() => {
-      let newFilteredPosts = base
-      newFilteredPosts = newFilteredPosts.filter(Boolean)
+      let newFilteredPosts = data
       // keyword
       newFilteredPosts = newFilteredPosts.filter((post) => {
-        const tagContent = post?.tags ? post.tags.join(" ") : ""
-        const searchContent = (post?.title ?? "") + (post?.summary ?? "") + tagContent
+        const tagContent = post.tags ? post.tags.join(" ") : ""
+        const searchContent = post.title + post.summary + tagContent
         return searchContent.toLowerCase().includes(q.toLowerCase())
       })
 
@@ -61,17 +41,14 @@ const PostList: React.FC<Props> = ({ q }) => {
             post && post.category && post.category.includes(currentCategory)
         )
       }
-      // order by 생성일
-      newFilteredPosts = [...newFilteredPosts].sort((a, b) => {
-        // Invalid Date 대비(NaN → 0)
-        const da = Number.isFinite(getPostDate(a).getTime()) ? getPostDate(a).getTime() : 0
-        const db = Number.isFinite(getPostDate(b).getTime()) ? getPostDate(b).getTime() : 0
-        return currentOrder === "asc" ? da - db : db - da
-      })
+      // order
+      if (currentOrder !== "desc") {
+        newFilteredPosts = newFilteredPosts.reverse()
+      }
 
       return newFilteredPosts
     })
-  }, [q, currentTag, currentCategory, currentOrder, base, setFilteredPosts])
+  }, [q, currentTag, currentCategory, currentOrder, setFilteredPosts])
 
   return (
     <>
@@ -79,7 +56,7 @@ const PostList: React.FC<Props> = ({ q }) => {
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
         )}
-        {filteredPosts.filter(Boolean).map((post) => (
+        {filteredPosts.map((post) => (
           <PostCard key={post.id} data={post} />
         ))}
       </div>
