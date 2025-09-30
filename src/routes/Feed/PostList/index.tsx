@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import PostCard from "src/routes/Feed/PostList/PostCard"
 import { DEFAULT_CATEGORY } from "src/constants"
 import usePostsQuery from "src/hooks/usePostsQuery"
@@ -19,7 +19,7 @@ const getPostDate = (p: any): Date => {
     p?.publishedAt;
 
   const raw = created ?? notionStart ?? fallback;
-  return raw ? new Date(raw) : new Date(0);
+  return raw ? new Date(raw) : new Date(0); // raw가 falsy면 epoch
 };
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 const PostList: React.FC<Props> = ({ q }) => {
   const router = useRouter()
   const data = usePostsQuery()
-  const base = Array.isArray(data) ? data : [];
+  const base = useMemo(() => (Array.isArray(data) ? data : []), [data]);
   const [filteredPosts, setFilteredPosts] = useState(base)
 
   const currentTag = `${router.query.tag || ``}` || undefined
@@ -39,10 +39,11 @@ const PostList: React.FC<Props> = ({ q }) => {
   useEffect(() => {
     setFilteredPosts(() => {
       let newFilteredPosts = base
+      newFilteredPosts = newFilteredPosts.filter(Boolean)
       // keyword
       newFilteredPosts = newFilteredPosts.filter((post) => {
-        const tagContent = post.tags ? post.tags.join(" ") : ""
-        const searchContent = post.title + post.summary + tagContent
+        const tagContent = post?.tags ? post.tags.join(" ") : ""
+        const searchContent = (post?.title ?? "") + (post?.summary ?? "") + tagContent
         return searchContent.toLowerCase().includes(q.toLowerCase())
       })
 
@@ -62,14 +63,15 @@ const PostList: React.FC<Props> = ({ q }) => {
       }
       // order by 생성일
       newFilteredPosts = [...newFilteredPosts].sort((a, b) => {
-        const da = getPostDate(a).getTime()
-        const db = getPostDate(b).getTime()
+        // Invalid Date 대비(NaN → 0)
+        const da = Number.isFinite(getPostDate(a).getTime()) ? getPostDate(a).getTime() : 0
+        const db = Number.isFinite(getPostDate(b).getTime()) ? getPostDate(b).getTime() : 0
         return currentOrder === "asc" ? da - db : db - da
       })
 
       return newFilteredPosts
     })
-  }, [q, currentTag, currentCategory, currentOrder, data, setFilteredPosts])
+  }, [q, currentTag, currentCategory, currentOrder, base, setFilteredPosts])
 
   return (
     <>
@@ -77,7 +79,7 @@ const PostList: React.FC<Props> = ({ q }) => {
         {!filteredPosts.length && (
           <p className="text-gray-500 dark:text-gray-300">Nothing! 😺</p>
         )}
-        {filteredPosts.map((post) => (
+        {filteredPosts.filter(Boolean).map((post) => (
           <PostCard key={post.id} data={post} />
         ))}
       </div>
